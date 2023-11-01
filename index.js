@@ -1,11 +1,15 @@
 const express = require("express");
 const cors = require("cors");
 const morgan = require("morgan");
+const path = require("path"); // Add this line
 
 const app = express();
 
 // Enable CORS for all routes
 app.use(cors());
+
+// Serve static files from the "public" directory
+app.use(express.static(path.join(__dirname, "public"))); // Add this line
 
 // Use JSON parser middleware
 app.use(express.json());
