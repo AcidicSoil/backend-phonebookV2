@@ -1,8 +1,14 @@
+require("dotenv").config();
+
 const express = require("express");
 const cors = require("cors");
 const morgan = require("morgan");
 
 const app = express();
+
+const mongoose = require("mongoose");
+
+const Entry = require("./models/entry");
 
 // Enable CORS for all routes
 app.use(cors());
@@ -24,22 +30,19 @@ app.use(
 );
 
 // Sample phonebook entries
-const phonebookEntries = [
-  { id: 1, name: "Arto Hellas", number: "040-123456" },
-  { id: 2, name: "Ada Lovelace", number: "39-44-5323523" },
-  { id: 3, name: "Dan Abramov", number: "12-43-234345" },
-  { id: 4, name: "Mary Poppendieck", number: "39-23-6423122" },
-];
+let entries = [];
 
 // Route to retrieve all phonebook entries
-app.get("/api/persons", (req, res) => {
-  res.json(phonebookEntries);
+app.get("/api/entries", (req, res) => {
+  Entry.find({}).then((entries) => {
+    res.json(entries);
+  });
 });
 
 // Route to retrieve a single phonebook entry by ID
-app.get("/api/persons/:id", (req, res) => {
+app.get("/api/entries/:id", (req, res) => {
   const id = Number(req.params.id);
-  const entry = phonebookEntries.find((person) => person.id === id);
+  const entry = entries.find((entry) => entry.id === id);
 
   if (entry) {
     res.json(entry);
@@ -49,16 +52,14 @@ app.get("/api/persons/:id", (req, res) => {
 });
 
 // Route to add a new phonebook entry
-app.post("/api/persons", (req, res) => {
+app.post("/api/entries", (req, res) => {
   const body = req.body;
 
   if (!body.name || !body.number) {
     return res.status(400).json({ error: "name or number is missing" });
   }
 
-  const existingEntry = phonebookEntries.find(
-    (person) => person.name === body.name
-  );
+  const existingEntry = entries.find((entry) => entry.name === body.name);
   if (existingEntry) {
     return res.status(400).json({ error: "name must be unique" });
   }
@@ -69,24 +70,24 @@ app.post("/api/persons", (req, res) => {
     number: body.number,
   };
 
-  phonebookEntries.push(newEntry);
+  entries.push(newEntry);
   res.json(newEntry);
 });
 
 // Route to delete a phonebook entry
-app.delete("/api/persons/:id", (req, res) => {
+app.delete("/api/entries/:id", (req, res) => {
   const id = Number(req.params.id);
-  const index = phonebookEntries.findIndex((person) => person.id === id);
+  const index = phonebookEntries.findIndex((entry) => entry.id === id);
 
   if (index !== -1) {
-    phonebookEntries.splice(index, 1);
+    entries.splice(index, 1);
     res.status(204).end();
   } else {
     res.status(404).end();
   }
 });
 
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });

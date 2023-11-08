@@ -23,20 +23,20 @@ mongoose
     console.error("Error connecting to MongoDB:", error.message);
   });
 
-const entrySchema = new mongoose.Schema({
+const personSchema = new mongoose.Schema({
   name: String,
   number: String,
 });
 
-const Entry = mongoose.model("Entry", entrySchema);
+const Person = mongoose.model("Person", personSchema);
 
 if (process.argv.length === 3) {
   // List all entries
-  Entry.find({})
+  Person.find({})
     .then((result) => {
       console.log("Phonebook:");
-      result.forEach((entry) => {
-        console.log(entry.name, entry.number);
+      result.forEach((person) => {
+        console.log(person.name, person.number);
       });
       mongoose.connection.close();
     })
@@ -49,12 +49,12 @@ if (process.argv.length === 3) {
   const name = process.argv[3];
   const number = process.argv[4];
 
-  const entry = new Entry({
+  const person = new Person({
     name: name,
     number: number,
   });
 
-  entry
+  person
     .save()
     .then(() => {
       console.log(`Added ${name} number ${number} to the phonebook`);
