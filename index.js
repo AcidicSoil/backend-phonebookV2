@@ -96,6 +96,11 @@ app.delete("/api/entries/:id", (req, res) => {
   }
 });
 
+// This should be the last route
+app.get("*", (req, res) => {
+  res.sendFile("dist", "index.html");
+});
+
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
