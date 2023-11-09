@@ -10,11 +10,11 @@ const mongoose = require("mongoose");
 
 const Entry = require("./models/entry");
 
+// Serve static files from the "dist" directory
+app.use(express.static("dist"));
+
 // Enable CORS for all routes
 app.use(cors());
-
-// Serve static files from the "public" directory
-app.use(express.static("dist"));
 
 // Use JSON parser middleware
 app.use(express.json());
@@ -96,7 +96,7 @@ app.delete("/api/entries/:id", (req, res) => {
   }
 });
 
-const PORT = process.env.PORT;
+const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
