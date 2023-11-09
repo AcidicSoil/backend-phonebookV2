@@ -32,6 +32,15 @@ app.use(
 // Sample phonebook entries
 let entries = [];
 
+app.get("/info", (req, res) => {
+  const date = new Date();
+  // Assuming 'entries' is an array of entry objects
+  const numberOfEntries = entries.length;
+  res.send(
+    `<p>Phonebook has info for ${numberOfEntries} people</p>` + `<p>${date}</p>`
+  );
+});
+
 // Route to retrieve all phonebook entries
 app.get("/api/entries", (req, res) => {
   Entry.find({}).then((entries) => {
@@ -77,7 +86,7 @@ app.post("/api/entries", (req, res) => {
 // Route to delete a phonebook entry
 app.delete("/api/entries/:id", (req, res) => {
   const id = Number(req.params.id);
-  const index = phonebookEntries.findIndex((entry) => entry.id === id);
+  const index = entries.findIndex((entry) => entry.id === id);
 
   if (index !== -1) {
     entries.splice(index, 1);

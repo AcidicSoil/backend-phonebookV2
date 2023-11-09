@@ -16,12 +16,12 @@ mongoose
     console.log("error connecting to MongoDB:", error.message);
   });
 
-const personSchema = new mongoose.Schema({
+const entrySchema = new mongoose.Schema({
   name: String,
   number: String,
 });
 
-personSchema.set("toJSON", {
+entrySchema.set("toJSON", {
   transform: (document, returnedObject) => {
     returnedObject.id = returnedObject._id.toString();
     delete returnedObject._id;
@@ -29,4 +29,4 @@ personSchema.set("toJSON", {
   },
 });
 
-module.exports = mongoose.model("Person", personSchema);
+module.exports = mongoose.model("Entry", entrySchema);
